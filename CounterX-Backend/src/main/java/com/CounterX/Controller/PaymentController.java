@@ -54,7 +54,8 @@ public class PaymentController {
         com.razorpay.Order order =
                 client.orders.create(options);
 
-        return order.toString();
+        // return order.toString();
+                return ResponseEntity.ok(order.toJson().toMap());
     }
 
 
