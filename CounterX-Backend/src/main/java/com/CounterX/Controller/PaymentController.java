@@ -1,5 +1,5 @@
 package com.CounterX.Controller;
-
+import org.springframework.http.ResponseEntity;
 import com.CounterX.entity.Order;
 import com.CounterX.entity.OrderStatus;
 import com.CounterX.entity.PaymentStatus;
@@ -34,30 +34,52 @@ public class PaymentController {
 
 
 
-    @PostMapping("/create-order")
-    public String createRazorpayOrder(@RequestBody Map<String, Object> data)
-            throws RazorpayException {
+    // @PostMapping("/create-order")
+    // public String createRazorpayOrder(@RequestBody Map<String, Object> data)
+    //         throws RazorpayException {
 
-        double amount =
-                Double.parseDouble(data.get("amount").toString());
+    //     double amount =
+    //             Double.parseDouble(data.get("amount").toString());
 
-        RazorpayClient client =
-                new RazorpayClient(razorpayKey, razorpaySecret);
+    //     RazorpayClient client =
+    //             new RazorpayClient(razorpayKey, razorpaySecret);
 
-        JSONObject options = new JSONObject();
+    //     JSONObject options = new JSONObject();
 
-        options.put("amount", (int) (amount * 100));
-        options.put("currency", "INR");
-        options.put("receipt",
-                "receipt_" + System.currentTimeMillis());
+    //     options.put("amount", (int) (amount * 100));
+    //     options.put("currency", "INR");
+    //     options.put("receipt",
+    //             "receipt_" + System.currentTimeMillis());
 
-        com.razorpay.Order order =
-                client.orders.create(options);
+    //     com.razorpay.Order order =
+    //             client.orders.create(options);
 
-        // return order.toString();
-                return ResponseEntity.ok(order.toJson().toMap());
-    }
+    //     // return order.toString();
+    //             return ResponseEntity.ok(order.toJson().toMap());
+    // }
+@PostMapping("/create-order")
+public ResponseEntity<?> createRazorpayOrder(
+        @RequestBody Map<String, Object> data)
+        throws RazorpayException {
 
+    double amount =
+            Double.parseDouble(data.get("amount").toString());
+
+    RazorpayClient client =
+            new RazorpayClient(razorpayKey, razorpaySecret);
+
+    JSONObject options = new JSONObject();
+
+    options.put("amount", (int) (amount * 100));
+    options.put("currency", "INR");
+    options.put("receipt",
+            "receipt_" + System.currentTimeMillis());
+
+    com.razorpay.Order order =
+            client.orders.create(options);
+
+    return ResponseEntity.ok(order.toJson().toMap());
+}
 
     /**
      * Marks the given order as paid and changes its status to PLACED.
